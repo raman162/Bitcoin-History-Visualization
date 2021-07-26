@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js" integrity="sha512-EbdJQSugx0nVWrtyK3JdQQ/03mS3Q1UiAhRtErbwl1YL/+e2hZdlIcSURxxh7WXHTzn83sjlh2rysACoJGfb6g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Bitcoin Price History</title>
+    <style>
+      .container {
+        margin: 0 auto;
+        max-width: 1280px;
+        padding: 1.5rem;
+      }
+      #scene-chart-wrapper {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        position: relative;
+      }
+      #scene-description {
+        min-width: 400px;
+        width: 30%;
+        height: auto;
+        padding-right: 1rem;
+      }
+      #scene-chart {
+        width: 70%;
+        height: 500px;
+      }
+      #scene-buttons-wrapper {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+      .change-scene-button {
+        margin: 0.5rem;
+      }
+      .dotted {
+        stroke: #5c5c5c;
+        stroke-dasharray: 1 1;
+        fill: none;
+      }
+
+      .tooltip {
+        opacity: 0;
+        position: absolute;
+        top: -14px;
+        left: 0;
+        padding: 0.6em 1em;
+        background: #fff;
+        text-align: center;
+        line-height: 1.4em;
+        font-size: 0.9em;
+        border: 1px solid #ddd;
+        z-index: 10;
+        transition: all 0.1s ease-out;
+        pointer-events: none;
+      }
+
+      .tooltip:before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 12px;
+        height: 12px;
+        background: white;
+        border: 1px solid #ddd;
+        border-top-color: transparent;
+        border-left-color: transparent;
+        transform: translate(-50%, 50%) rotate(45deg);
+        transform-origin: center center;
+        z-index: 10;
+      }
+
+      .tooltip-date {
+        margin-bottom: 0.2em;
+        font-size: 1.1em;
+        line-height: 1.4em;
+        font-weight: 600;
+      }
+
+      #factoid-tooltip{
+        max-width: 400px;
+      }
+
+      #factoid-tooltip-list{
+        padding: 0 0.25rem 0 1.25rem;
+        text-align: left;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class='container'>
+      <h1 id='title'>Bitcoin Price History</h1>
+      <div class='scene-container'>
+        <h2 id='scene-title'>Loading....</h2>
+        <div id='scene-chart-wrapper'>
+          <p id='scene-description'>
+          </p>
+          <div id='scene-chart'>
+          </div>
+          <div id='tooltip' class='tooltip'>
+            <div>
+              <span id='tooltip-date-value'></span>
+            </div>
+            <div class='tooltip-price'>
+              Price: <span id='tooltip-price-value'></span>
+            </div>
+          </div>
+          <div id='factoid-tooltip' class='tooltip'>
+            <div class='tooltip-date'>
+              <span id='factoid-tooltip-month'>Placeholder</span>
+            </div>
+            <div class='tooltip-factoids'>
+              <ul id='factoid-tooltip-list'>
+                <li>Placeholder Fact</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div id='scene-buttons-wrapper'>
+          <button class="change-scene-button" id="previous-scene-button" data-scene-index disabled=true>
+            Prevous
+          </button>
+          <button class="change-scene-button" id="next-scene-button" data-scene-index="1">
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+    <script>
+      const dailyPriceCsvPath = 'data/bitcoin-daily-high-price.csv';
+      const monthlyPriceCsvPath = 'data/bitcoin-monthly-high-price.csv';
+      const bitcoinFactoidsJsonPath = 'data/bitcoin-factoids.json';
+      const scenes = [
+        {
+          title: 'Inception of Bitcoin',
+          start_date: new Date('2009-01-01'),
+          end_date: new Date('2011-10-31')
+        },
+        {
+          title: 'Bitcoin Adoption',
+          start_date: new Date('2011-11-01'),
+          end_date: new Date('2016-10-31')
+        },
+        {
+          title: 'The First Bitcoin Bubble',
+          start_date: new Date('2016-11-01'),
+          end_date: new Date('2018-03-31')
+        },
+        {
+          title: 'The Bitcoin Rollercoaster',
+          start_date: new Date('2018-04-01'),
+          end_date: new Date('2020-02-28')
+        },
+        {
+          title: 'The Second Bitcoin Bubble (Covid Edition)',
+          start_date: new Date('2020-03-01'),
+          end_date: new Date('2021-06-30')
+        },
+        {
+          title: 'Total Overview',
+          start_date: new Date('2009-01-01'),
+          end_date: new Date('2021-06-30')
+        }
+      ];
+      var dailyPrices, monthlyPrices, bitcoinFactoids;
+
+      async function fetchData(path) {
+        const response = await fetch(path);
+        return response.text();
+      }
+
+      function parseCSV(csvString) {
+        return Papa.parse(
+          csvString,
+          {
+            header: true,
+            skipEmptyLines: true,
+            transform: (rawValue, header) => {
+              if (header == 'date') {
+                return new Date(rawValue)
+              }
+              if (header == 'price') {
+                return parseFloat(rawValue)
+              }
+              return rawValue
+            }
+          }
+        );
+      }
+
+      function parseFactoids(rawJson) {
+        let json = JSON.parse(rawJson);
+        json.data = json.data.map((data) => {
+          data.date = new Date(data.month)
+          return data
+        });
+        return json;
+      }
+
+      function setSceneContent(sceneIndex) {
+        const scene = scenes[sceneIndex]
+        let sceneTitleEl = document.getElementById('scene-title');
+        sceneTitleEl.innerHTML = scene.title;
+
+        let sceneDescriptionEl = document.getElementById('scene-description');
+        sceneDescriptionEl.innerHTML = 'some description about this scene';
+
+        const sceneFactoids = bitcoinFactoids.data.filter((factoid) => (
+          factoid.date >= scene.start_date && factoid.date <= scene.end_date
+        ));
+
+        const sceneDailyPrices = dailyPrices.data.filter((daily_price) => (
+          daily_price.date >= scene.start_date && daily_price.date <= scene.end_date
+        ));
+
+        setSceneChart({sceneDailyPrices, sceneFactoids});
+        setSceneButtons(sceneIndex);
+      }
+
+      function setSceneChart({sceneDailyPrices, sceneFactoids}) {
+        //TODO: add annotations for factoids
+        //TODO: add descriptions summarizing the era
+        //TODO: animate line chart
+        //TODO: add select dropdown to jump to different scenes
+
+        //Setting D3 Chart
+        let sceneChart = document.getElementById('scene-chart')
+        sceneChart.innerHTML = "";
+        const [width, height] = [sceneChart.offsetWidth, sceneChart.offsetHeight]
+
+        let dimensions = {
+          width: width,
+          height: height,
+          margin: {
+            top: 40,
+            right: 20,
+            bottom: 40,
+            left: 60
+          }
+        };
+        dimensions.boundedWidth =
+          dimensions.width - dimensions.margin.left - dimensions.margin.right;
+        dimensions.boundedHeight =
+          dimensions.height - dimensions.margin.top - dimensions.margin.bottom;
+
+
+        //Draw Canvas
+        const d3Chart = d3.select('#scene-chart').
+          append("svg").
+          attr("width", dimensions.width).
+          attr("height", dimensions.height);
+
+        //Create Bounding Box
+        const bounds = d3Chart.
+          append("g").
+          style(
+            "transform",
+            `translate(${dimensions.margin.left}px,${dimensions.margin.top}px)`
+          );
+
+        //Define Domain and Range for Scales
+        const yScale = d3.
+          scaleLinear().
+          domain(d3.extent(sceneDailyPrices, (dailyPrice) => dailyPrice.price)).
+          range([dimensions.boundedHeight, 0]);
+
+        const xScale = d3.
+          scaleTime().
+          domain(d3.extent(sceneDailyPrices, (dailyPrice) => dailyPrice.date)).
+          range([0, dimensions.boundedWidth]);
+
+        //Convert Datapoints to X and Y Value
+        const lineGenerator = d3.
+          line().
+          x((d) => xScale(d.date)).
+          y((d) => yScale(d.price))
+
+        //Convert X and Y into Path
+        const line = bounds.
+          datum(sceneDailyPrices).
+          append("path").
+          attr("d", lineGenerator(sceneDailyPrices)).
+          attr("class", "price-line").
+          attr("fill", "none").
+          attr("stroke", "steelblue").
+          attr("stroke-width", 1.5).
+          call(function(path) {
+            path.transition().
+              duration(2000).
+              attrTween("stroke-dasharray", tweenDash).
+              on("end", addFactoids)
+          });
+
+
+        //Create X axis and Y axis
+        const yAxisGenerator = d3.axisLeft().scale(yScale);
+        const yAxis = bounds.append("g").call(yAxisGenerator);
+
+        const xAxisGenerator = d3.axisBottom().scale(xScale);
+        const xAxis = bounds.
+          append("g").
+          call(xAxisGenerator.tickFormat(d3.timeFormat("%b %Y"))).
+          style(
+            "transform",
+            `translateY(${dimensions.boundedHeight}px)`
+          );
+
+
+        //Factoid annotations
+        function addFactoids() {
+          sceneFactoids.forEach(({month, date, factoids}) => {
+            const midMonth = new Date(date.valueOf())
+            midMonth.setDate(midMonth.getDate() + 15);
+            const xPos = xScale(midMonth)
+            const getDistanceFromMidMonth = (d) => (
+              Math.abs(d.date - midMonth)
+            );
+            const closestIndex = d3.scan(
+              sceneDailyPrices,
+              (a, b) => getDistanceFromMidMonth(a) - getDistanceFromMidMonth(b)
+            );
+            const closestDailyPrice = sceneDailyPrices[closestIndex];
+            const maxPrice = sceneDailyPrices.reduce((maxPrice, {price}) => (
+              maxPrice > price ? maxPrice : price
+            ), 0)
+            const multiplier = closestDailyPrice.price > maxPrice/2.0 ? 1 : -1
+
+            const bufferFromLine = 100
+            const yPos = yScale(closestDailyPrice.price) + (bufferFromLine * multiplier)
+
+            const factoidGroup = bounds.
+              append("g").
+              attr("class", "factoid-group").
+              style("opacity", 0).
+              style(
+                "transform",
+                `translate(${xPos}px,${yPos-50}px)`
+              ).datum({xPos, yPos})
+
+            factoidGroup.
+              append("circle").
+              attr("class", "factoid-circle").
+              attr("r", 10).
+              attr("stroke", "black").
+              attr("fill", "steelblue").
+              attr("stroke-width", 2).
+              on("mousemove", onFactoidMouseMove).
+              on("mouseleave", onFactoidMouseLeave);
+
+            factoidGroup.
+              append("rect").
+              attr("class", "dotted").
+              attr("stroke-width", "1px").
+              attr("width", ".5px").
+              attr("y", multiplier > 0 ? -bufferFromLine : 0).
+              attr("height", bufferFromLine);
+
+            //factoidGroup.
+            //  transition().
+            //  style(
+            //    "transform",
+            //    `translate(${xPos}px,${yPos}px)`
+            //  ).
+            //  style("opacity", 1);
+
+            function onFactoidMouseMove() {
+              factoidTooltip.select('#factoid-tooltip-month').text(month)
+
+              let factoidTooltipList = document.getElementById('factoid-tooltip-list')
+              factoidTooltipList.innerHTML = ""
+              factoids.forEach((factoid) => {
+                const newLi = document.createElement("li");
+                newLi.innerHTML = factoid
+                factoidTooltipList.appendChild(newLi);
+              })
+
+
+              const sceneDescriptionEl = document.getElementById('scene-description');
+              const sceneDescriptionWidth = sceneDescriptionEl.getBoundingClientRect().width
+
+              const tooltipX = sceneDescriptionWidth +
+                xPos +
+                dimensions.margin.left;
+
+              const tooltipY = yPos + dimensions.margin.top
+              factoidTooltip.style(
+                "transform",
+                `translate(calc(-50% + ${tooltipX}px), calc(-100% + ${tooltipY}px))`
+              );
+              factoidTooltip.style("opacity", 1);
+            }
+
+            function onFactoidMouseLeave() {
+              factoidTooltip.style("opacity", 0);
+            }
+
+
+          })
+
+          d3.selectAll(".factoid-group").
+            transition().
+            style("opacity", 1).
+            style(
+              "transform",
+              function({xPos, yPos}) {
+                return `translate(${xPos}px,${yPos}px)`
+              }
+            ).
+            delay(function(d,i){return 100*i})
+        }
+
+
+        //Tooltip setup
+        const xAxisLine = bounds.
+          append("g").
+          append("rect").
+          attr("class", "dotted").
+          attr("stroke-width", "1px").
+          attr("width", ".5px").
+          attr("height", dimensions.boundedHeight);
+
+        const listeningRect = bounds.
+          append("rect").
+          attr("class", "listening-rect").
+          attr("width", dimensions.boundedWidth).
+          attr("height", dimensions.boundedHeight).
+          on("mousemove", onMouseMove).
+          on("mouseleave", onMouseLeave).
+          style("opacity", 0)
+
+        function onMouseMove(event) {
+          const mousePosition = d3.pointer(event);
+          const hoveredDate = xScale.invert(mousePosition[0]);
+
+          const getDistanceFromHoveredDate = (d) => (
+            Math.abs(d.date - hoveredDate)
+          );
+
+          const closestIndex = d3.scan(
+            sceneDailyPrices,
+            (a, b) => getDistanceFromHoveredDate(a) - getDistanceFromHoveredDate(b)
+          );
+
+          const closestDataPoint = sceneDailyPrices[closestIndex];
+
+          const closestXValue = closestDataPoint.date
+          const closestYValue = closestDataPoint.price
+
+          const formatDate = d3.timeFormat("%B %A %-d, %Y");
+
+          tooltip.select("#tooltip-date-value").text(
+            formatDate(closestXValue)
+          );
+
+
+          tooltip.select("#tooltip-price-value").text(
+            formatPrice(closestYValue)
+          );
+
+          const sceneDescriptionEl = document.getElementById('scene-description');
+          const sceneDescriptionWidth = sceneDescriptionEl.getBoundingClientRect().width
+
+          const tooltipX = sceneDescriptionWidth +
+            xScale(closestXValue) +
+            dimensions.margin.left;
+          const tooltipY = yScale(closestYValue) + dimensions.margin.top;
+          tooltip.style(
+            "transform",
+            `translate(calc(-50% + ${tooltipX}px), calc(-100% + ${tooltipY}px))`
+          );
+          tooltip.style("opacity", 1);
+
+          tooltipCircle.
+            attr("cx", xScale(closestXValue)).
+            attr("cy", yScale(closestYValue)).
+            style("opacity", 1);
+
+          xAxisLine.attr("x", xScale(closestXValue));
+        }
+
+        function onMouseLeave() {
+          tooltip.style("opacity", 0);
+          tooltipCircle.style("opacity", 0);
+        }
+
+        const tooltip = d3.select("#tooltip");
+        const tooltipCircle = bounds.
+          append("circle").
+          attr("class", "tooltip-circle").
+          attr("r", 4).
+          attr("stroke", "#af9358").
+          attr("fill", "white").
+          attr("stroke-width", 2).
+          style("opacity", 0);
+        const factoidTooltip = d3.select("#factoid-tooltip");
+      }
+
+      function formatPrice(price) {
+        return price.toLocaleString(
+          "en",
+          {
+            style: "currency",
+            currency: "USD"
+          }
+        )
+      }
+
+      function formatDate(date) {
+        return date.toLocaleString(
+          "en",
+          {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            timeZone: "UTC"
+          }
+        )
+      }
+
+      function tweenDash() {
+        const l = this.getTotalLength()
+        const i = d3.interpolateString("0," + l, l + "," + l);
+        return function(t) { return i(t) };
+      }
+
+      function setSceneButtons(sceneIndex) {
+        let prevButtonEl = document.getElementById('previous-scene-button')
+        if (sceneIndex != 0) {
+          prevButtonEl.dataset.sceneIndex = sceneIndex - 1;
+          prevButtonEl.disabled = false
+        } else {
+          prevButtonEl.disabled = true
+        }
+
+        let nextButtonEl = document.getElementById('next-scene-button')
+        const lastSceneIndex = scenes.length - 1
+        if (sceneIndex != lastSceneIndex) {
+          nextButtonEl.dataset.sceneIndex = sceneIndex + 1;
+          nextButtonEl.disabled = false
+        } else {
+          nextButtonEl.disabled = true
+        }
+      }
+
+      function onSceneButtonClick(event) {
+        const sceneIndex = parseInt(event.currentTarget.dataset.sceneIndex);
+        setSceneContent(sceneIndex);
+      }
+
+      async function init() {
+        const [
+          dailyPriceCsvString,
+          monthlyPriceCsvString,
+          bitcoinFactoidsRawJson
+        ] = await Promise.all([
+          fetchData(dailyPriceCsvPath),
+          fetchData(monthlyPriceCsvPath),
+          fetchData(bitcoinFactoidsJsonPath)
+        ]);
+        [
+          dailyPrices,
+          monthlyPrices,
+          bitcoinFactoids
+        ] = [
+          parseCSV(dailyPriceCsvString),
+          parseCSV(monthlyPriceCsvString),
+          parseFactoids(bitcoinFactoidsRawJson)
+        ];
+
+        let sceneButtons = document.querySelectorAll(".change-scene-button")
+        sceneButtons.forEach((sceneButton) => {
+          sceneButton.addEventListener('click', onSceneButtonClick)
+        })
+
+        setSceneContent(0);
+      }
+
+
+      init();
+    </script>
+  </body>
+</html>

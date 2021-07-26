@@ -1,0 +1,414 @@
+{
+  "data": [
+    {
+      "month": "January 2009",
+      "factoids": [
+        "Genesis block created with 50 BTC",
+        "First Transaction between Satoshi Nakamoto (the creator of bitcoin) and Hal Finney (the developer of the bitcoin technology)"
+      ],
+      "month_yyyy_mm_dd": "2009-01-01"
+    },
+    {
+      "month": "October 2009",
+      "factoids": [
+        "Exchange rate between bitcoin and USD is established at 1USD = 1,309.03 BTC"
+      ],
+      "month_yyyy_mm_dd": "2009-10-01"
+    },
+    {
+      "month": "February 2010",
+      "factoids": [
+        "Bitcoin Market, the first official cryptocurrency stock exchange is launched"
+      ],
+      "month_yyyy_mm_dd": "2010-02-01"
+    },
+    {
+      "month": "May 2010",
+      "factoids": [
+        "[Laszlo Hanyecz] (indirectly) buys Papa John's pizza for 10,000 BTC"
+      ],
+      "month_yyyy_mm_dd": "2010-05-01"
+    },
+    {
+      "month": "July 2010",
+      "factoids": [
+        "Bitcoin is mentioned on slashdot.org and drives an increase in users",
+        "Bitcoin exchange rate increases 10 times in ten days",
+        "MtGox Cryptocurrency exchange is launched in China"
+      ],
+      "month_yyyy_mm_dd": "2010-07-01"
+    },
+    {
+      "month": "February 2011",
+      "factoids": [
+        "Bitcoin reaches parity with the US Dollar"
+      ],
+      "month_yyyy_mm_dd": "2011-02-01"
+    },
+    {
+      "month": "March 2011",
+      "factoids": [
+        "Stocks open to exchange BTC for GBP and BRL"
+      ],
+      "month_yyyy_mm_dd": "2011-03-01"
+    },
+    {
+      "month": "April 2011",
+      "factoids": [
+        "Time magazine publishes an article about cryptocurrency"
+      ],
+      "month_yyyy_mm_dd": "2011-04-01"
+    },
+    {
+      "month": "May 2011",
+      "factoids": [
+        "BitPay, a bitcoin payment service provider is launched"
+      ],
+      "month_yyyy_mm_dd": "2011-05-01"
+    },
+    {
+      "month": "January 2012",
+      "factoids": [
+        "Bitcoin makes its way to mainstream television. It's mentioned in an episode of 'The Good Wife' where Jim Cramer testifies that bitcoin is not a true currency saying that there's no central bank to regulate it and it's digital and completely peer to peer."
+      ],
+      "month_yyyy_mm_dd": "2012-01-01"
+    },
+    {
+      "month": "November 2012",
+      "factoids": [
+        "Wordpress begins to accept payments",
+        "Reward in mining bitcoin halves for the first time from 50 BTC to 25 BTC"
+      ],
+      "month_yyyy_mm_dd": "2012-11-01"
+    },
+    {
+      "month": "February 2013",
+      "factoids": [
+        "Bitcoin based payment processor Coinbase reported selling $1 million USD worth of bitcoins a single month."
+      ],
+      "month_yyyy_mm_dd": "2013-02-01"
+    },
+    {
+      "month": "October 2013",
+      "factoids": [
+        "FBI seized roughly 26,000 BTC from silk road during the arrest of alleged owner Ross William"
+      ],
+      "month_yyyy_mm_dd": "2013-10-01"
+    },
+    {
+      "month": "December 2013",
+      "factoids": [
+        "China banned the use of cryptocurrency"
+      ],
+      "month_yyyy_mm_dd": "2013-12-01"
+    },
+    {
+      "month": "February 2014",
+      "factoids": [
+        "One of the largest bitcoin exchanges, Mt. Gox suspends withdrawls and files for bankruptcy. They claim 744,000 bitcoins were stolen",
+        "The Chicago Sun-Times accepts payment in bitcoin for subscriptions"
+      ],
+      "month_yyyy_mm_dd": "2014-02-01"
+    },
+    {
+      "month": "July 2014",
+      "factoids": [
+        "Newegg and Dell start accepting bitcoin"
+      ],
+      "month_yyyy_mm_dd": "2014-07-01"
+    },
+    {
+      "month": "December 2014",
+      "factoids": [
+        "Microsoft begins accepting bitcoin to buy Xbox games and Windows software"
+      ],
+      "month_yyyy_mm_dd": "2014-12-01"
+    },
+    {
+      "month": "February 2015",
+      "factoids": [
+        "Payment Provider Stripe launches integration to process bitcoin"
+      ],
+      "month_yyyy_mm_dd": "2015-02-01"
+    },
+    {
+      "month": "January 2015",
+      "factoids": [
+        "Coinbase, a cryptocurrency exchange raises 75 million USD in funding",
+        "Bitstamp a UK-based exchange had 19,000 BTC stolen"
+      ],
+      "month_yyyy_mm_dd": "2015-01-01"
+    },
+    {
+      "month": "June 2015",
+      "factoids": [
+        "New York State Department of Financial Services released rules to regular Bitcoin and digital currency busines that serve customers located in the New York State. These are the first government rules aimed at digital currency enterprises"
+      ],
+      "month_yyyy_mm_dd": "2015-06-01"
+    },
+    {
+      "month": "March 2016",
+      "factoids": [
+        "Japan acknowledges virtual currencies like Bitcoin as paymean means on equal basis with rea lmoney.",
+        "Bidorbuy opens, the largest south african online cryptocurrency market"
+      ],
+      "month_yyyy_mm_dd": "2016-03-01"
+    },
+    {
+      "month": "April 2016",
+      "factoids": [
+        "Steam begins accepting bitcoin"
+      ],
+      "month_yyyy_mm_dd": "2016-04-01"
+    },
+    {
+      "month": "July 2016",
+      "factoids": [
+        "Second Halving Day where reward of mining blocks dropped from 25 Bitcoin to 12.5"
+      ],
+      "month_yyyy_mm_dd": "2016-07-01"
+    },
+    {
+      "month": "August 2016",
+      "factoids": [
+        "Bitfinex, a large exchange is attacked taking almost 120,000 bitcoins"
+      ],
+      "month_yyyy_mm_dd": "2016-08-01"
+    },
+    {
+      "month": "January 2017",
+      "factoids": [
+        "Bitcoins breaks the $1,000 mark"
+      ],
+      "month_yyyy_mm_dd": "2017-01-01"
+    },
+    {
+      "month": "April 2017",
+      "factoids": [
+        "Japan recognizes bitcoin as a legal method of payment"
+      ],
+      "month_yyyy_mm_dd": "2017-04-01"
+    },
+    {
+      "month": "June 2017",
+      "factoids": [
+        "Bitcoin reaches the $3,000 mark"
+      ],
+      "month_yyyy_mm_dd": "2017-06-01"
+    },
+    {
+      "month": "August 2017",
+      "factoids": [
+        "Bitcoin is split into two derivative digital currencies, classic Bitcoin (BTC) and Bitcoin Cash (BCH)"
+      ],
+      "month_yyyy_mm_dd": "2017-08-01"
+    },
+    {
+      "month": "September 2017",
+      "factoids": [
+        "Bitcoin reaches the $5,000 mark"
+      ],
+      "month_yyyy_mm_dd": "2017-09-01"
+    },
+    {
+      "month": "November 2017",
+      "factoids": [
+        "Bitcoin price exceeds $10,000 mark"
+      ],
+      "month_yyyy_mm_dd": "2017-11-01"
+    },
+    {
+      "month": "December 2017",
+      "factoids": [
+        "Bitcoin nearly reaches the $20,000 mark",
+        "Steam stops accepting bitcoin citing slow transaction speeds and price volatility",
+        "South Korea announces additional measures to regulate bitcoin"
+      ],
+      "month_yyyy_mm_dd": "2017-12-01"
+    },
+    {
+      "month": "January 2018",
+      "factoids": [
+        "South Korea launches an investigation of cryptocurrency services offered by local banks",
+        "Stripe announced it would phase out support for processing bitcoin transactions citing slow transaction speeds and rising fees",
+        "Facebook bans people from advertising bitcoin and other cryptocurrencies"
+      ],
+      "month_yyyy_mm_dd": "2018-01-01"
+    },
+    {
+      "month": "February 2018",
+      "factoids": [
+        "Bitcoin drops below $10,000"
+      ],
+      "month_yyyy_mm_dd": "2018-02-01"
+    },
+    {
+      "month": "March 2018",
+      "factoids": [
+        "Google and Twitter ban advertising bitcoin and other cryptocurrencies",
+        "SEC states that cryptocurrency trading platforms should be registered with the SEC as exchanges"
+      ],
+      "month_yyyy_mm_dd": "2018-03-01"
+    },
+    {
+      "month": "May 2018",
+      "factoids": [
+        "Goldman Sachs announces to open a Bitcoin trading operation",
+        "Justice Department opened a case investigating illegal activities affecting the price of bitcoin"
+      ],
+      "month_yyyy_mm_dd": "2018-05-01"
+    },
+    {
+      "month": "November 2018",
+      "factoids": [
+        "Bitcoin Cash splits into two currencies. Bitcoin Cash and Bitcoin SV. This causes a decline in prices"
+      ],
+      "month_yyyy_mm_dd": "2018-11-01"
+    },
+    {
+      "month": "December 2018",
+      "factoids": [
+        "Bitcoin mining drops significantly"
+      ],
+      "month_yyyy_mm_dd": "2018-12-01"
+    },
+    {
+      "month": "January 2019",
+      "factoids": [
+        "Coinstar Machines start selling Bitcoin at grocery stores accross the US"
+      ],
+      "month_yyyy_mm_dd": "2019-01-01"
+    },
+    {
+      "month": "February 2019",
+      "factoids": [
+        "Canadian Crypto Exchange QuadrigaCX Goes Bankrupt after the founder Gerald Cotten who knew the passwords to 'cold storage' unexpectedly died in India in December"
+      ],
+      "month_yyyy_mm_dd": "2019-02-01"
+    },
+    {
+      "month": "March 2019",
+      "factoids": [
+        "Bitwise study finds that the majority of bitcoin trading volume is faked by unregulated exchanges"
+      ],
+      "month_yyyy_mm_dd": "2019-03-01"
+    },
+    {
+      "month": "June 2019",
+      "factoids": [
+        "Facebook launches 'Libra', it's own cryptocurrency"
+      ],
+      "month_yyyy_mm_dd": "2019-06-01"
+    },
+    {
+      "month": "October 2019",
+      "factoids": [
+        "Unicef begins accepting crypto donations"
+      ],
+      "month_yyyy_mm_dd": "2019-10-01"
+    },
+    {
+      "month": "January 2020",
+      "factoids": [
+        "CME Group Launched Bitcoin options"
+      ],
+      "month_yyyy_mm_dd": "2020-01-01"
+    },
+    {
+      "month": "May 2020",
+      "factoids": [
+        "Paul Tudor Jones Buys Bitcoin as a Hedge Against Inflation",
+        "Bitcoin halves block mining reward a third time from 12.5 BTC to 6.25 BTC",
+        "China orders their bitcoin miners to shutdown in an 'Orderly Manner'"
+      ],
+      "month_yyyy_mm_dd": "2020-05-01"
+    },
+    {
+      "month": "July 2020",
+      "factoids": [
+        "Twitter accounts for Elon Musk, Bill Gayes, Kanye West, Barrack Obama and many more are hacked and they ask their followers to send funds to a specific wallet"
+      ],
+      "month_yyyy_mm_dd": "2020-07-01"
+    },
+    {
+      "month": "August 2020",
+      "factoids": [
+        "MicroStrategy purchases $250 million USD worth of Bitcoins (21,453 BTC)"
+      ],
+      "month_yyyy_mm_dd": "2020-08-01"
+    },
+    {
+      "month": "October 2020",
+      "factoids": [
+        "Square Buys $50 million USD in Bitcoin",
+        "Paypal launches Bitcoin and Crypto"
+      ],
+      "month_yyyy_mm_dd": "2020-10-01"
+    },
+    {
+      "month": "November 2020",
+      "factoids": [
+        "US Government Seized $1 Billion in Bitcoin from Silk Road"
+      ],
+      "month_yyyy_mm_dd": "2020-11-01"
+    },
+    {
+      "month": "December 2020",
+      "factoids": [
+        "Microstrategy raises more money so it can buy more crypto",
+        "Bitcoin Passes $20k mark for the first time",
+        "Coinbase files for IPO"
+      ],
+      "month_yyyy_mm_dd": "2020-12-01"
+    },
+    {
+      "month": "January 2021",
+      "factoids": [
+        "Bitcoin surpasses $30,000 mark",
+        "Elon Musk changes his twitter bio to '#bitcoin'"
+      ],
+      "month_yyyy_mm_dd": "2021-01-01"
+    },
+    {
+      "month": "February 2021",
+      "factoids": [
+        "Tesla reveals they bought 1.5 Billion USD worth of bitcoin",
+        "Bitcoin exceeds $50,000 mark"
+      ],
+      "month_yyyy_mm_dd": "2021-02-01"
+    },
+    {
+      "month": "March 2021",
+      "factoids": [
+        "Tesla announces that you can purchase cars in Bitcoin",
+        "Bitcoin exceeds $60,0000 mark"
+      ],
+      "month_yyyy_mm_dd": "2021-03-01"
+    },
+    {
+      "month": "April 2021",
+      "factoids": [
+        "Turkey Bans cryptocurrency payments",
+        "Venmo allows buying and selling cryptocurrencies"
+      ],
+      "month_yyyy_mm_dd": "2021-04-01"
+    },
+    {
+      "month": "May 2021",
+      "factoids": [
+        "Tesla stops acceting payments in bitcoin citing environmental concerns",
+        "China cracksdown on usage of cyrptocurrencies",
+        "Bitcoin begins to plunge"
+      ],
+      "month_yyyy_mm_dd": "2021-05-01"
+    },
+    {
+      "month": "June 2021",
+      "factoids": [
+        "El Salvador becomes the first country in the world to allow Bitcoin as legal tender",
+        "Bitcoin sinks below $30,000"
+      ],
+      "month_yyyy_mm_dd": "2021-06-01"
+    }
+  ]
+}
