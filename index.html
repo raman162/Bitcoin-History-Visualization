@@ -223,10 +223,11 @@
       }
 
       function setSceneChart({sceneDailyPrices, sceneFactoids}) {
-        //TODO: add annotations for factoids
-        //TODO: add descriptions summarizing the era
-        //TODO: animate line chart
         //TODO: add select dropdown to jump to different scenes
+        //TODO: add helpful tidbits
+        //TODO: add descriptions summarizing the era
+        //TODO: add README
+        //TODO: styling
 
         //Setting D3 Chart
         let sceneChart = document.getElementById('scene-chart')
@@ -274,6 +275,77 @@
           domain(d3.extent(sceneDailyPrices, (dailyPrice) => dailyPrice.date)).
           range([0, dimensions.boundedWidth]);
 
+        //Create clipPath: everything out of this area won't be drawn
+        const clip = bounds.append("defs").append("svg:clipPath").
+          attr("id", "clip").
+          append("svg:rect").
+          attr("width", dimensions.boundedWidth).
+          attr("height", dimensions.boundedHeight).
+          attr("x", 0).
+          attr("y", 0);
+
+        // Add Brushing
+        const brush = d3.brushX().
+          extent([ [0,0], [dimensions.boundedWidth, dimensions.boundedHeight] ]).
+          on("end", onBrushEnd)
+
+        let idleTimeout;
+        function idled() { idleTimeout = null; }
+
+        function onBrushEnd(event) {
+          let extent = event.selection
+
+          if(!extent) {
+            if (!idleTimeout) {
+              return idleTimeout = setTimeout(idled, 350);
+            }
+            xScale.domain([4,8]);
+          } else {
+            xScale.domain(
+              [
+                xScale.invert(extent[0]),
+                xScale.invert(extent[1])
+              ]
+            )
+            line.select(".brush").call(brush.move, null) //remove the gray brush after selection
+            factoidBoundary.selectAll(".factoid-group").remove() //remove factoids
+          }
+
+          xAxis.transition().duration(1000).call(d3.axisBottom(xScale))
+          line.
+            select('.price-line').
+            attr("stroke-dasharray", null).
+            attr("stroke-dashoffset", null).
+            transition().
+            duration(1000).
+            attr("d", lineGenerator(sceneDailyPrices)).
+            on("end", addFactoids);
+        }
+
+        bounds.
+          on("dblclick", function() {
+            xScale.domain(
+              d3.extent(sceneDailyPrices, (dailyPrice) => dailyPrice.date)
+            );
+            xAxis.transition().call(d3.axisBottom(xScale));
+            factoidBoundary.selectAll(".factoid-group").remove() //remove factoids
+            line.
+              select('.price-line').
+              transition().
+              attr("d", lineGenerator(sceneDailyPrices)).
+              on("end", addFactoids);
+          }).
+          on("mousemove", onMouseMove).
+          on("mouseleave", onMouseLeave)
+
+        const xAxisLine = bounds.
+          append("g").
+          append("rect").
+          attr("class", "dotted").
+          attr("stroke-width", "1px").
+          attr("width", ".5px").
+          attr("height", dimensions.boundedHeight);
+
         //Convert Datapoints to X and Y Value
         const lineGenerator = d3.
           line().
@@ -282,19 +354,35 @@
 
         //Convert X and Y into Path
         const line = bounds.
-          datum(sceneDailyPrices).
+          append('g').
+          attr('clip-path', "url(#clip)")
+
+        const linePath = line.
           append("path").
+          datum(sceneDailyPrices).
           attr("d", lineGenerator(sceneDailyPrices)).
           attr("class", "price-line").
           attr("fill", "none").
           attr("stroke", "steelblue").
-          attr("stroke-width", 1.5).
-          call(function(path) {
-            path.transition().
-              duration(2000).
-              attrTween("stroke-dasharray", tweenDash).
-              on("end", addFactoids)
-          });
+          attr("stroke-width", 1.5)
+
+        //animate linepath
+        const lineLength = linePath.node().getTotalLength();
+        linePath.
+          attr("stroke-dasharray", lineLength + " " + lineLength).
+          attr("stroke-dashoffset", lineLength).
+          transition().
+          ease(d3.easeLinear).
+          attr("stroke-dashoffset", 0).
+          duration(1500).
+          on("end", addFactoids)
+
+
+        //add brushing to line
+        line.
+          append("g").
+          attr("class", "brush").
+          call(brush)
 
 
         //Create X axis and Y axis
@@ -310,9 +398,17 @@
             `translateY(${dimensions.boundedHeight}px)`
           );
 
+        //Create Factoid Boundary
+        const factoidBoundary = bounds.
+          append('g').
+          attr("clip-path", "url(#clip)")
+
 
         //Factoid annotations
         function addFactoids() {
+          //do not add factoids if they exist
+          if (factoidBoundary.selectAll('.factoid-group').size() != 0) { return }
+
           sceneFactoids.forEach(({month, date, factoids}) => {
             const midMonth = new Date(date.valueOf())
             midMonth.setDate(midMonth.getDate() + 15);
@@ -333,7 +429,7 @@
             const bufferFromLine = 100
             const yPos = yScale(closestDailyPrice.price) + (bufferFromLine * multiplier)
 
-            const factoidGroup = bounds.
+            const factoidGroup = factoidBoundary.
               append("g").
               attr("class", "factoid-group").
               style("opacity", 0).
@@ -359,14 +455,6 @@
               attr("width", ".5px").
               attr("y", multiplier > 0 ? -bufferFromLine : 0).
               attr("height", bufferFromLine);
-
-            //factoidGroup.
-            //  transition().
-            //  style(
-            //    "transform",
-            //    `translate(${xPos}px,${yPos}px)`
-            //  ).
-            //  style("opacity", 1);
 
             function onFactoidMouseMove() {
               factoidTooltip.select('#factoid-tooltip-month').text(month)
@@ -416,22 +504,12 @@
 
 
         //Tooltip setup
-        const xAxisLine = bounds.
-          append("g").
-          append("rect").
-          attr("class", "dotted").
-          attr("stroke-width", "1px").
-          attr("width", ".5px").
-          attr("height", dimensions.boundedHeight);
-
-        const listeningRect = bounds.
-          append("rect").
-          attr("class", "listening-rect").
-          attr("width", dimensions.boundedWidth).
-          attr("height", dimensions.boundedHeight).
-          on("mousemove", onMouseMove).
-          on("mouseleave", onMouseLeave).
-          style("opacity", 0)
+        //const listeningRect = bounds.
+        //  append("rect").
+        //  attr("class", "listening-rect").
+        //  attr("width", dimensions.boundedWidth).
+        //  attr("height", dimensions.boundedHeight).
+        //  style("opacity", 0)
 
         function onMouseMove(event) {
           const mousePosition = d3.pointer(event);
