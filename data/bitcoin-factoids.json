@@ -142,15 +142,15 @@
     {
       "month": "June 2015",
       "factoids": [
-        "New York State Department of Financial Services released rules to regular Bitcoin and digital currency busines that serve customers located in the New York State. These are the first government rules aimed at digital currency enterprises"
+        "New York State Department of Financial Services released rules to regular Bitcoin and digital currency business that serve customers located in the New York State. These are the first government rules aimed at digital currency enterprises"
       ],
       "month_yyyy_mm_dd": "2015-06-01"
     },
     {
       "month": "March 2016",
       "factoids": [
-        "Japan acknowledges virtual currencies like Bitcoin as paymean means on equal basis with rea lmoney.",
-        "Bidorbuy opens, the largest south african online cryptocurrency market"
+        "Japan acknowledges virtual currencies like Bitcoin as payment means on equal basis with real money.",
+        "Bidorbuy opens, the largest south African online cryptocurrency market"
       ],
       "month_yyyy_mm_dd": "2016-03-01"
     },
@@ -204,11 +204,11 @@
       "month_yyyy_mm_dd": "2017-08-01"
     },
     {
-      "month": "September 2017",
+      "month": "October 2017",
       "factoids": [
         "Bitcoin reaches the $5,000 mark"
       ],
-      "month_yyyy_mm_dd": "2017-09-01"
+      "month_yyyy_mm_dd": "2017-10-01"
     },
     {
       "month": "November 2017",
@@ -275,7 +275,7 @@
     {
       "month": "January 2019",
       "factoids": [
-        "Coinstar Machines start selling Bitcoin at grocery stores accross the US"
+        "Coinstar Machines start selling Bitcoin at grocery stores across the US"
       ],
       "month_yyyy_mm_dd": "2019-01-01"
     },
@@ -313,6 +313,13 @@
         "CME Group Launched Bitcoin options"
       ],
       "month_yyyy_mm_dd": "2020-01-01"
+    },
+    {
+      "month": "March 2020",
+      "factoids": [
+        "COVID-19 is declared a pandemic by the WHO"
+      ],
+      "month_yyyy_mm_dd": "2020-03-01"
     },
     {
       "month": "May 2020",
@@ -396,8 +403,8 @@
     {
       "month": "May 2021",
       "factoids": [
-        "Tesla stops acceting payments in bitcoin citing environmental concerns",
-        "China cracksdown on usage of cyrptocurrencies",
+        "Tesla stops accepting payments in bitcoin citing environmental concerns",
+        "China crackdowns on usage of cyrptocurrencies",
         "Bitcoin begins to plunge"
       ],
       "month_yyyy_mm_dd": "2021-05-01"
@@ -405,8 +412,7 @@
     {
       "month": "June 2021",
       "factoids": [
-        "El Salvador becomes the first country in the world to allow Bitcoin as legal tender",
-        "Bitcoin sinks below $30,000"
+        "El Salvador becomes the first country in the world to allow Bitcoin as legal tender"
       ],
       "month_yyyy_mm_dd": "2021-06-01"
     }
