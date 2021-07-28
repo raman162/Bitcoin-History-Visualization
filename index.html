@@ -4,11 +4,13 @@
   <head>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js" integrity="sha512-EbdJQSugx0nVWrtyK3JdQQ/03mS3Q1UiAhRtErbwl1YL/+e2hZdlIcSURxxh7WXHTzn83sjlh2rysACoJGfb6g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+
     <title>Bitcoin Timeline</title>
     <style>
       .container {
         margin: 0 auto;
-        max-width: 1280px;
+        max-width: 1300px;
         padding: 1.5rem;
       }
       #scene-title {
@@ -19,10 +21,11 @@
         display: flex;
         flex-direction: row;
         position: relative;
+        flex-wrap: wrap;
       }
       #scene-description {
-        min-width: 400px;
-        width: 30%;
+        min-width: 350px;
+        width: calc(30% - 1rem);
         height: auto;
         padding-right: 1rem;
       }
@@ -48,6 +51,16 @@
         position: absolute;
         right: 0;
         margin-top: 10px;
+      }
+
+      @media screen and (max-width: 1300px) {
+        #scene-description {
+          width: 100%;
+        }
+
+        #scene-chart {
+          width: 100%;
+        }
       }
 
 
@@ -830,6 +843,8 @@
         sceneButtons.forEach((sceneButton) => {
           sceneButton.addEventListener('click', onSceneButtonClick)
         });
+
+        window.addEventListener('resize', setSceneContent(sceneIndex));
 
         setSceneContent(0);
       }
