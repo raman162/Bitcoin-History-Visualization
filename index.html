@@ -4,12 +4,15 @@
   <head>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js" integrity="sha512-EbdJQSugx0nVWrtyK3JdQQ/03mS3Q1UiAhRtErbwl1YL/+e2hZdlIcSURxxh7WXHTzn83sjlh2rysACoJGfb6g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <title>Bitcoin Price History</title>
+    <title>Bitcoin Timeline</title>
     <style>
       .container {
         margin: 0 auto;
         max-width: 1280px;
         padding: 1.5rem;
+      }
+      #scene-title {
+        margin-bottom: 10px;
       }
       #scene-chart-wrapper {
         width: 100%;
@@ -23,9 +26,16 @@
         height: auto;
         padding-right: 1rem;
       }
+
+      #scene-description p:first-child{
+        margin-top: 0px;
+      }
       #scene-chart {
         width: 70%;
         height: 500px;
+      }
+      #scene-controls-wrapper {
+        position: relative;
       }
       #scene-buttons-wrapper {
         width: 100%;
@@ -36,6 +46,13 @@
       .change-scene-button {
         margin: 0.5rem;
       }
+      #scene-select-wrapper {
+        position: absolute;
+        right: 0;
+        margin-top: 10px;
+      }
+
+
       .dotted {
         stroke: #5c5c5c;
         stroke-dasharray: 1 1;
@@ -89,14 +106,27 @@
         padding: 0 0.25rem 0 1.25rem;
         text-align: left;
       }
+
+      #y-axis-label {
+        font-size: 14px;
+      }
     </style>
   </head>
 
   <body>
     <div class='container'>
-      <h1 id='title'>Bitcoin Price History</h1>
+      <h1 id='title'>Bitcoin Timeline</h1>
       <div class='scene-container'>
         <h2 id='scene-title'>Loading....</h2>
+        <div id='scene-period'>
+          <em>
+            <span id='scene-start-month'>
+            </span>
+            to
+            <span id='scene-end-month'>
+            </span>
+          </em>
+        </div>
         <div id='scene-chart-wrapper'>
           <p id='scene-description'>
           </p>
@@ -121,53 +151,168 @@
             </div>
           </div>
         </div>
-        <div id='scene-buttons-wrapper'>
-          <button class="change-scene-button" id="previous-scene-button" data-scene-index disabled=true>
-            Prevous
-          </button>
-          <button class="change-scene-button" id="next-scene-button" data-scene-index="1">
-            Next
-          </button>
+        <div id='scene-controls-wrapper'>
+          <div id='scene-select-wrapper'>
+            <label for='scene-select'>Jump To:</label>
+            <select name="scene-select" id="scene-select"></select>
+          </div>
+          <div id='scene-buttons-wrapper'>
+            <button class="change-scene-button" id="previous-scene-button" data-scene-index disabled=true>
+              Prevous
+            </button>
+            <button class="change-scene-button" id="next-scene-button" data-scene-index="1">
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </div>
     <script>
       const dailyPriceCsvPath = 'data/bitcoin-daily-high-price.csv';
-      const monthlyPriceCsvPath = 'data/bitcoin-monthly-high-price.csv';
       const bitcoinFactoidsJsonPath = 'data/bitcoin-factoids.json';
       const scenes = [
         {
           title: 'Inception of Bitcoin',
           start_date: new Date('2009-01-01'),
-          end_date: new Date('2011-10-31')
+          end_date: new Date('2011-10-31'),
+          description: `
+            <p>
+              On October 31st 2008, a paper authored by Satoshi Nakamoto titled
+              'Bitcoin: A Peer-to-Peer Electronic Cash System' that detailed a
+              network to process electronic transactions without trust. In
+              January 2009, history was made when the first version
+              of Bitcoin technology was released.
+            </p>
+
+            <p>
+              In 2010, Bitcoin was used to purchase a pizza and by 2011 it's
+              value reached parity with the US dollar. Shortly afterwards,
+              Bitcoin was added to exchanges and started getting media
+              attention. This caused a sharp rise in value to $35.00 USD in July
+              but also had a steep descent to less than $3.00 USD by October. This
+              was the first exhibitition of how volatile Bitcoin was.
+            </p>
+          `
         },
         {
           title: 'Bitcoin Adoption',
           start_date: new Date('2011-11-01'),
-          end_date: new Date('2016-10-31')
+          end_date: new Date('2016-10-31'),
+          description: `
+            <p>
+              In the beginning of 2012, Bitcoin had it's first big break by
+              making an appearance on television where it's declared to not
+              be a currency. This seems to stunt Bitcoin's growth but that's
+              only temporary until 2013 where "Wordpress", the world's largest
+              website management tool announces it will begin accepting Bitcoin
+              as payment. Not too long afterwards, Microsoft, Paypal, Stripe
+              and others announce that they will also process Bitcoin.
+            </p>
+
+            <p>
+              From 2012 to 2016, Bitcoin also received it's fair share of bad
+              press. From the FBI seizing roughly 26,000 BTC from Silk Road, an
+              infamous criminal marketplace to popular exchanges having
+              bitcoins stolen and therefore becoming bankrupt. News like this is
+              what made people remained wary of the new currency.
+            </p>
+          `
         },
         {
           title: 'The First Bitcoin Bubble',
           start_date: new Date('2016-11-01'),
-          end_date: new Date('2018-03-31')
+          end_date: new Date('2018-03-31'),
+          description: `
+            <p>
+              Bitcoin starts of great at the beginning of 2017 with finally
+              breaking the significant $1,000 USD mark. Later in the year,
+              Bitcoin Cash (BCH) is created (forked) off Bitcoin to address
+              concerns with Bitcoin's capacity to process transactions. By the
+              end of 2017 it had nearly reached the $20,000 USD mark. At this
+              point, the term "Bitcoin" became a household name and there were
+              multiple people promoting it.
+            </p>
+
+            <p>
+              Sadly, the Bitcoin bubble popped before it could reach the
+              $20,000 USD mark. Companies started to announce that they
+              couldn't accept Bitcoin as payment anymore citing volatility and
+              slow transaction speeds, South Korea started to investigate banks
+              offering Bitcoin services and both Facebook and Google, two largest
+              internet advertising companies banned cryptocurrency ads.
+            </p>
+          `
         },
         {
           title: 'The Bitcoin Rollercoaster',
           start_date: new Date('2018-04-01'),
-          end_date: new Date('2020-02-28')
+          end_date: new Date('2020-01-31'),
+          description: `
+            <p>
+              The decline from the bubble continues as "Bitcoin SV" is created
+              (forked) off "Bitcoin Cash". This caused a major decline in both
+              Bitcoin's price and mining activity.
+            </p>
+
+            <p>
+              People started spending more time researching Bitcoin and it's
+              activity. In 2018, the justice department began an investigation
+              to see if illegal activities affected the price of Bitcoin and a
+              study in the early 2019 conducted by bitwise finds that the
+              majority of trading activity is faked by unregulated exchanges.
+              That news didn't stop Bitcoin from regaining traction in 2019 and
+              jumping back to a value of over $13,000 USD. As usual that height
+              was short-lived and Bitcoin's value dropped below $8,000 by the
+              end of the year.
+            </p>
+          `
         },
         {
           title: 'The Second Bitcoin Bubble (Covid Edition)',
-          start_date: new Date('2020-03-01'),
-          end_date: new Date('2021-06-30')
+          start_date: new Date('2020-02-01'),
+          end_date: new Date('2021-06-30'),
+          description: `
+            <p>
+              With COVID-19 becoming more of a major concern in the beginning
+              of 2020, both the value of Bitcoin and the stock market start to
+              decline. That fall was only shortlived though, by May the value
+              of Bitcoin started to rise again. People and companies started
+              purchasing bitcoin as an asset, many citing worries that inflation
+              will reduce the value of their money.
+            </p>
+
+            <p>
+              Bitcoin climbed from $5,000 USD in March 2020 to an all-time high
+              of $64,000 USD in April 2021. There was a sharp decline in May
+              after Elon Musk, a bitcoin advocate announced that Tesla would
+              stop accepting Bitcoin citing environmental concerns with
+              processing transactions. During that same time, China also
+              started that they were gong to crackdown on bitcoin mining and
+              trading.
+            </p>
+          `
         },
         {
           title: 'Total Overview',
           start_date: new Date('2009-01-01'),
-          end_date: new Date('2021-06-30')
+          end_date: new Date('2021-06-30'),
+          description: `
+            <p>
+              Bitcoin's history is quite a wild ride. In the beginning, the
+              primary highlight seemed to be the novel technology of a
+              decentralized currency with no central authority to be used for trade.
+              Now, although some people still value that old sentiment, Bitcoin
+              is viewed more as an asset with many companies, people and
+              investment firms purchasing bitcoin with hopes that it will
+              contintue to increase in monetary value. We are still in the
+              early days and as shown throught this visualization, it's very
+              difficult to predict it's future.
+            </p>
+          `
         }
       ];
-      var dailyPrices, monthlyPrices, bitcoinFactoids;
+      var dailyPrices, bitcoinFactoids;
+      var sceneIndex = 0;
 
       async function fetchData(path) {
         const response = await fetch(path);
@@ -202,13 +347,21 @@
         return json;
       }
 
-      function setSceneContent(sceneIndex) {
+      function setSceneContent(index) {
+        sceneIndex = index
         const scene = scenes[sceneIndex]
         let sceneTitleEl = document.getElementById('scene-title');
         sceneTitleEl.innerHTML = scene.title;
+        const scenePeriodParse = d3.utcFormat("%B %Y")
+        let sceneStartMonthEl = document.getElementById('scene-start-month');
+        console.log('setSceneContent', {start: scene.start_date, end: scene.end_date})
+        sceneStartMonthEl.innerHTML = scenePeriodParse(scene.start_date);
+
+        let sceneEndMonthEl = document.getElementById('scene-end-month');
+        sceneEndMonthEl.innerHTML = scenePeriodParse(scene.end_date);
 
         let sceneDescriptionEl = document.getElementById('scene-description');
-        sceneDescriptionEl.innerHTML = 'some description about this scene';
+        sceneDescriptionEl.innerHTML = scene.description || 'some description about this scene';
 
         const sceneFactoids = bitcoinFactoids.data.filter((factoid) => (
           factoid.date >= scene.start_date && factoid.date <= scene.end_date
@@ -220,10 +373,10 @@
 
         setSceneChart({sceneDailyPrices, sceneFactoids});
         setSceneButtons(sceneIndex);
+        setSceneSelect(sceneIndex);
       }
 
       function setSceneChart({sceneDailyPrices, sceneFactoids}) {
-        //TODO: add select dropdown to jump to different scenes
         //TODO: add helpful tidbits
         //TODO: add descriptions summarizing the era
         //TODO: add README
@@ -386,8 +539,17 @@
 
 
         //Create X axis and Y axis
-        const yAxisGenerator = d3.axisLeft().scale(yScale);
+        const yAxisGenerator = d3.axisLeft().
+          scale(yScale).
+          tickFormat(formatPrice);
         const yAxis = bounds.append("g").call(yAxisGenerator);
+
+        const yAxisLabel = d3Chart.
+          append("text").
+          attr("y", 15).
+          attr("dy", "0.75em").
+          text("BTC Value (US Dollars)").
+          attr("id", "y-axis-label")
 
         const xAxisGenerator = d3.axisBottom().scale(xScale);
         const xAxis = bounds.
@@ -499,17 +661,8 @@
                 return `translate(${xPos}px,${yPos}px)`
               }
             ).
-            delay(function(d,i){return 100*i})
+            delay(function(d,i){return 25*i})
         }
-
-
-        //Tooltip setup
-        //const listeningRect = bounds.
-        //  append("rect").
-        //  attr("class", "listening-rect").
-        //  attr("width", dimensions.boundedWidth).
-        //  attr("height", dimensions.boundedHeight).
-        //  style("opacity", 0)
 
         function onMouseMove(event) {
           const mousePosition = d3.pointer(event);
@@ -625,6 +778,16 @@
         }
       }
 
+      function setSceneSelect(sceneIndex) {
+        let sceneSelectEl = document.getElementById('scene-select');
+        sceneSelectEl.value = sceneIndex;
+      }
+
+      function onSceneSelectChange(event) {
+        const sceneIndex = parseInt(event.currentTarget.value);
+        setSceneContent(sceneIndex);
+      }
+
       function onSceneButtonClick(event) {
         const sceneIndex = parseInt(event.currentTarget.dataset.sceneIndex);
         setSceneContent(sceneIndex);
@@ -633,27 +796,32 @@
       async function init() {
         const [
           dailyPriceCsvString,
-          monthlyPriceCsvString,
           bitcoinFactoidsRawJson
         ] = await Promise.all([
           fetchData(dailyPriceCsvPath),
-          fetchData(monthlyPriceCsvPath),
           fetchData(bitcoinFactoidsJsonPath)
         ]);
         [
           dailyPrices,
-          monthlyPrices,
           bitcoinFactoids
         ] = [
           parseCSV(dailyPriceCsvString),
-          parseCSV(monthlyPriceCsvString),
           parseFactoids(bitcoinFactoidsRawJson)
         ];
 
-        let sceneButtons = document.querySelectorAll(".change-scene-button")
+        //setup navigation
+        //setup select dropdown
+        let sceneSelectEl = document.getElementById('scene-select');
+        scenes.forEach((scene, sceneIndex) => {
+          sceneSelectEl[sceneIndex] = new Option(scene.title, sceneIndex);
+        });
+        sceneSelectEl.addEventListener('change', onSceneSelectChange);
+
+        //setup buttons
+        let sceneButtons = document.querySelectorAll(".change-scene-button");
         sceneButtons.forEach((sceneButton) => {
           sceneButton.addEventListener('click', onSceneButtonClick)
-        })
+        });
 
         setSceneContent(0);
       }
