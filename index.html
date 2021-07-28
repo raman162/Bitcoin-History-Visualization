@@ -27,12 +27,10 @@
         padding-right: 1rem;
       }
 
-      #scene-description p:first-child{
-        margin-top: 0px;
-      }
       #scene-chart {
         width: 70%;
         height: 500px;
+        min-width: 800px;
       }
       #scene-controls-wrapper {
         position: relative;
@@ -110,6 +108,12 @@
       #y-axis-label {
         font-size: 14px;
       }
+
+      #help-label {
+        font-size: 14px;
+        font-style: italic;
+        text-align: right;
+      }
     </style>
   </head>
 
@@ -128,8 +132,8 @@
           </em>
         </div>
         <div id='scene-chart-wrapper'>
-          <p id='scene-description'>
-          </p>
+          <div id='scene-description'>
+          </div>
           <div id='scene-chart'>
           </div>
           <div id='tooltip' class='tooltip'>
@@ -142,11 +146,10 @@
           </div>
           <div id='factoid-tooltip' class='tooltip'>
             <div class='tooltip-date'>
-              <span id='factoid-tooltip-month'>Placeholder</span>
+              <span id='factoid-tooltip-month'></span>
             </div>
             <div class='tooltip-factoids'>
               <ul id='factoid-tooltip-list'>
-                <li>Placeholder Fact</li>
               </ul>
             </div>
           </div>
@@ -377,9 +380,6 @@
       }
 
       function setSceneChart({sceneDailyPrices, sceneFactoids}) {
-        //TODO: add helpful tidbits
-        //TODO: add descriptions summarizing the era
-        //TODO: add README
         //TODO: styling
 
         //Setting D3 Chart
@@ -550,6 +550,14 @@
           attr("dy", "0.75em").
           text("BTC Value (US Dollars)").
           attr("id", "y-axis-label")
+
+        const helpLabel = d3Chart.
+          append("text").
+          attr("y", 15).
+          attr("x", 200).
+          attr("dy", "0.75em").
+          text("Brush against the x-axis to zoom and double click to reset. Hover over the circles to see more info.").
+          attr("id", "help-label")
 
         const xAxisGenerator = d3.axisBottom().scale(xScale);
         const xAxis = bounds.
