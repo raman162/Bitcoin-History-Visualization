@@ -25,13 +25,12 @@
         position: relative;
         flex-wrap: wrap;
       }
-      #scene-description {
+      #scene-description-wrapper{
         min-width: 350px;
         width: calc(30% - 1rem);
         height: auto;
         padding-right: 1rem;
       }
-
       #scene-chart {
         width: 70%;
         height: 500px;
@@ -56,12 +55,21 @@
       }
 
       @media screen and (max-width: 1300px) {
-        #scene-description {
+        #scene-description-wrapper {
           width: 100%;
         }
 
         #scene-chart {
           width: 100%;
+        }
+
+        #scene-controls-wrapper {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        #scene-buttons-wrapper {
+          width: inherit;
         }
       }
 
@@ -135,6 +143,11 @@
   <body>
     <div class='container'>
       <h1 id='title'>Bitcoin Timeline</h1>
+      <p id='description'>
+        Here we'll be taking a look at how the value of Bitcoin has changed
+        throughout it's lifetime. The story is divided into different chapters
+        that can be changed by using the controls underneath the chart.
+      </p>
       <div class='scene-container'>
         <h2 id='scene-title'>Loading....</h2>
         <div id='scene-period'>
@@ -147,7 +160,9 @@
           </em>
         </div>
         <div id='scene-chart-wrapper'>
-          <div id='scene-description'>
+          <div id='scene-description-wrapper'>
+            <div id='scene-description'>
+            </div>
           </div>
           <div id='scene-chart'>
           </div>
@@ -179,7 +194,9 @@
               Prevous
             </button>
             <button class="change-scene-button" id="next-scene-button" data-scene-index="1">
-              Next
+              Next:
+              <span id='next-scene-title'>
+              </span>
             </button>
           </div>
         </div>
@@ -229,10 +246,10 @@
 
             <p>
               From 2012 to 2016, Bitcoin also received it's fair share of bad
-              press. From the FBI seizing roughly 26,000 BTC from Silk Road, an
-              infamous criminal marketplace to popular exchanges having
-              bitcoins stolen and therefore becoming bankrupt. News like this is
-              what made people remained wary of the new currency.
+              press. The FBI seized roughly 26,000 BTC from Silk Road, an
+              infamous criminal marketplace. Popular cryptocurrency exchanges had
+              bitcoins stolen and became bankrupt. News like this made people
+              remain wary of Bitcoin.
             </p>
           `
         },
@@ -242,22 +259,22 @@
           end_date: new Date('2018-03-31'),
           description: `
             <p>
-              Bitcoin starts of great at the beginning of 2017 with finally
-              breaking the significant $1,000 USD mark. Later in the year,
-              Bitcoin Cash (BCH) is created (forked) off Bitcoin to address
-              concerns with Bitcoin's capacity to process transactions. By the
-              end of 2017 it had nearly reached the $20,000 USD mark. At this
-              point, the term "Bitcoin" became a household name and there were
-              multiple people promoting it.
+              At the beginning of 2017, Bitcoin finally broke the significant
+              $1,000 USD mark. Later in the year, Bitcoin Cash (BCH) is created
+              (forked) off Bitcoin to address concerns with Bitcoin's capacity
+              to process transactions. By the end of 2017 it had nearly reached
+              the $20,000 USD mark. At this point, the term "Bitcoin" became a
+              household name and there were multiple people promoting it.
             </p>
 
             <p>
               Sadly, the Bitcoin bubble popped before it could reach the
               $20,000 USD mark. Companies started to announce that they
               couldn't accept Bitcoin as payment anymore citing volatility and
-              slow transaction speeds, South Korea started to investigate banks
+              slow transaction speeds. South Korea started to investigate banks
               offering Bitcoin services and both Facebook and Google, two largest
-              internet advertising companies banned cryptocurrency ads.
+              internet advertising companies banned cryptocurrency ads citing trying
+              to prevent scams.
             </p>
           `
         },
@@ -279,7 +296,7 @@
               study in the early 2019 conducted by bitwise finds that the
               majority of trading activity is faked by unregulated exchanges.
               That news didn't stop Bitcoin from regaining traction in 2019 and
-              jumping back to a value of over $13,000 USD. As usual that height
+              jumping back to a value of over $13,000 USD. As usual, that hype
               was short-lived and Bitcoin's value dropped below $8,000 by the
               end of the year.
             </p>
@@ -311,7 +328,7 @@
           `
         },
         {
-          title: 'Total Overview',
+          title: 'Complete Overview',
           start_date: new Date('2009-01-01'),
           end_date: new Date('2021-06-30'),
           description: `
@@ -323,7 +340,7 @@
               is viewed more as an asset with many companies, people and
               investment firms purchasing bitcoin with hopes that it will
               contintue to increase in monetary value. We are still in the
-              early days and as shown throught this visualization, it's very
+              early days and as shown throughout the chapters, it's very
               difficult to predict it's future.
             </p>
           `
@@ -783,21 +800,26 @@
       }
 
       function setSceneButtons(sceneIndex) {
-        let prevButtonEl = document.getElementById('previous-scene-button')
+        let prevButtonEl = document.getElementById('previous-scene-button');
         if (sceneIndex != 0) {
-          prevButtonEl.dataset.sceneIndex = sceneIndex - 1;
+          const prevSceneIndex = sceneIndex - 1;
+          prevButtonEl.dataset.sceneIndex = prevSceneIndex;
           prevButtonEl.disabled = false
         } else {
           prevButtonEl.disabled = true
         }
 
         let nextButtonEl = document.getElementById('next-scene-button')
+        let nextSceneTitleEl = document.getElementById('next-scene-title');
         const lastSceneIndex = scenes.length - 1
         if (sceneIndex != lastSceneIndex) {
-          nextButtonEl.dataset.sceneIndex = sceneIndex + 1;
+          const nextSceneIndex = sceneIndex + 1;
+          nextButtonEl.dataset.sceneIndex = nextSceneIndex;
           nextButtonEl.disabled = false
+          nextSceneTitleEl.innerHTML = scenes[nextSceneIndex].title
         } else {
           nextButtonEl.disabled = true
+          nextSceneTitleEl.innerHTML = ""
         }
       }
 
