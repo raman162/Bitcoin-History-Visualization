@@ -30,7 +30,7 @@ user to make contact with to see more details. Underneath the chart are a
 series of controls used to change the scenes, it has simple 'next/previous'
 buttons and a drop-down that enables the user to quickly jump to a scene.
 
-![Visual Strucure](screenshots/visual-structure.png)
+![Visual Strucure](screenshots/visual-structure.png){ width=97% }
 
 ## Scenes
 The scenes in the Bitcoin Timeline visualization are:  
@@ -57,7 +57,7 @@ annotations provide further details when the user wants to "dig in". Since the
 annotations are time-based, they are forced to change within each scene to
 match the new time period the scene represents.
 
-![Annotation Tooltip](screenshots/annotation-tooltip.png)
+![Annotation Tooltip](screenshots/annotation-tooltip.png){ width=25% }
 
 
 ## Parameters
@@ -88,4 +88,4 @@ The triggers in the Bitcoin Timeline visualization are:
   follows the cursor on the x-axis
 
 
-![Brush To Zoom](screenshots/brush-to-zoom.png)
+![Brush To Zoom](screenshots/brush-to-zoom.png){ width=50% }
