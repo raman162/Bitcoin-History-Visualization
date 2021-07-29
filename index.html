@@ -53,6 +53,9 @@
         right: 0;
         margin-top: 10px;
       }
+      #data-sources-container {
+        margin-top: 2rem;
+      }
 
       @media screen and (max-width: 1300px) {
         #scene-description-wrapper {
@@ -148,8 +151,10 @@
         throughout it's lifetime. The story is divided into different chapters
         that can be changed by using the controls underneath the chart.
       </p>
+
       <div class='scene-container'>
         <h2 id='scene-title'>Loading....</h2>
+
         <div id='scene-period'>
           <em>
             <span id='scene-start-month'>
@@ -159,6 +164,7 @@
             </span>
           </em>
         </div>
+
         <div id='scene-chart-wrapper'>
           <div id='scene-description-wrapper'>
             <div id='scene-description'>
@@ -184,6 +190,8 @@
             </div>
           </div>
         </div>
+        <!-- End Scene Chart -->
+
         <div id='scene-controls-wrapper'>
           <div id='scene-select-wrapper'>
             <label for='scene-select'>Jump To:</label>
@@ -200,8 +208,45 @@
             </button>
           </div>
         </div>
+        <!-- End Scene Controls -->
+
       </div>
+      <!-- End Scene Container -->
+
+      <div id='data-sources-container'>
+        <span>Data Sources:</span>
+        <ul>
+          <li>
+            <a href="https://en.bitcoinwiki.org/wiki/Bitcoin_history">
+              Bitcoin History (January 2009 - December 2020) - Bitcoin Wiki
+            </a>
+          </li>
+          <li>
+            <a href="https://99bitcoins.com/bitcoin/historical-price/">
+              Bitcoin Historical Price (January 2009 - December 2020) - 99 Bitcoins
+            </a>
+          </li>
+          <li>
+            <a href="https://www.google.com/search?q=bitcoin&tbs=cdr:1,cd_min:1/1/2021,cd_max:6/30/2021,sbd:1&tbm=nws&sxsrf=ALeKk03YtEVFc3cpcVhHZbhdXTyzD4t9yA:1627560492553&ei=LJoCYdCKIY2s5NoPl8Sc6Ag&start=0&sa=N&ved=2ahUKEwjQ0Iion4jyAhUNFlkFHRciB404ChDx0wN6BAgHEDU&biw=1536&bih=734&dpr=1.25">
+              Bitcoin News Topics (January 2021 - June 2021) - Google News
+            </a>
+          </li>
+          <li>
+            <a href="https://knoema.com/infographics/nmyfsf/bitcoin-price-from-2009-to-2021">
+              Bitcoin Daily Price (January 2009 - September 2013) - Knomea
+            </a>
+          </li>
+          <li>
+            <a href="https://www.coindesk.com/price/bitcoin">
+              Bitcoin Daily Price (October 2013 - June 2021) - Coinbase
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- End Data Sources Container -->
     </div>
+
+    <!-- End Content Container -->
     <script>
       const dailyPriceCsvPath = 'data/bitcoin-daily-high-price.csv';
       const bitcoinFactoidsJsonPath = 'data/bitcoin-factoids.json';
@@ -411,8 +456,6 @@
       }
 
       function setSceneChart({sceneDailyPrices, sceneFactoids}) {
-        //TODO: styling
-
         //Setting D3 Chart
         let sceneChart = document.getElementById('scene-chart')
         sceneChart.innerHTML = "";
@@ -548,7 +591,7 @@
           attr("class", "price-line").
           attr("fill", "none").
           attr("stroke", "steelblue").
-          attr("stroke-width", 1.5)
+          attr("stroke-width", 2)
 
         //animate linepath
         const lineLength = linePath.node().getTotalLength();
@@ -884,5 +927,7 @@
 
       init();
     </script>
+    <!-- End Script -->
+
   </body>
 </html>
