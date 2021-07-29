@@ -389,7 +389,6 @@
         sceneTitleEl.innerHTML = scene.title;
         const scenePeriodParse = d3.utcFormat("%B %Y")
         let sceneStartMonthEl = document.getElementById('scene-start-month');
-        console.log('setSceneContent', {start: scene.start_date, end: scene.end_date})
         sceneStartMonthEl.innerHTML = scenePeriodParse(scene.start_date);
 
         let sceneEndMonthEl = document.getElementById('scene-end-month');
@@ -671,13 +670,18 @@
 
 
               const sceneDescriptionEl = document.getElementById('scene-description');
-              const sceneDescriptionWidth = sceneDescriptionEl.getBoundingClientRect().width
+              const sceneChartEl = document.getElementById('scene-chart');
+              const xOffset = sceneChartEl.parentElement.offsetWidth - sceneChartEl.offsetWidth
+              const yOffset = sceneChartEl.parentElement.offsetHeight - sceneChartEl.offsetHeight
 
-              const tooltipX = sceneDescriptionWidth +
+              const tooltipX = xOffset +
                 xPos +
                 dimensions.margin.left;
 
-              const tooltipY = yPos + dimensions.margin.top
+              const tooltipY = yOffset +
+                yPos +
+                dimensions.margin.top
+
               factoidTooltip.style(
                 "transform",
                 `translate(calc(-50% + ${tooltipX}px), calc(-100% + ${tooltipY}px))`
@@ -734,12 +738,16 @@
           );
 
           const sceneDescriptionEl = document.getElementById('scene-description');
-          const sceneDescriptionWidth = sceneDescriptionEl.getBoundingClientRect().width
+          const sceneChartEl = document.getElementById('scene-chart');
+          const xOffset = sceneChartEl.parentElement.offsetWidth - sceneChartEl.offsetWidth
+          const yOffset = sceneChartEl.parentElement.offsetHeight - sceneChartEl.offsetHeight
 
-          const tooltipX = sceneDescriptionWidth +
+          const tooltipX = xOffset +
             xScale(closestXValue) +
             dimensions.margin.left;
-          const tooltipY = yScale(closestYValue) + dimensions.margin.top;
+          const tooltipY = yOffset +
+            yScale(closestYValue) +
+            dimensions.margin.top;
           tooltip.style(
             "transform",
             `translate(calc(-50% + ${tooltipX}px), calc(-100% + ${tooltipY}px))`
