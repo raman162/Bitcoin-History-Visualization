@@ -5,6 +5,8 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js" integrity="sha512-EbdJQSugx0nVWrtyK3JdQQ/03mS3Q1UiAhRtErbwl1YL/+e2hZdlIcSURxxh7WXHTzn83sjlh2rysACoJGfb6g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
     <link rel="icon" href="https://raman162.github.io/Bitcoin-History-Visualization/favicon.ico" type="image/x-icon">
 
 
@@ -421,7 +423,7 @@
       function parseFactoids(rawJson) {
         let json = JSON.parse(rawJson);
         json.data = json.data.map((data) => {
-          data.date = new Date(data.month)
+          data.date = new Date(data.month_yyyy_mm_dd)
           return data
         });
         return json;
